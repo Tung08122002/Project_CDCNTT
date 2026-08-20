@@ -1,0 +1,45 @@
+[
+  {
+    "id": "case_01_good_exact_section",
+    "case_type": "good",
+    "question": "Trong học phần Tiếng Anh thương mại 2, giáo trình chính là sách nào?",
+    "ground_truth": [
+      {"source": "Đề cương tiếng anh thương mại 2.pdf", "page": 4, "section": "11. Danh mục tài liệu tham khảo của học phần"}
+    ],
+    "recommended_settings": {"top_k": 3, "chunk_size": 700, "chunk_overlap": 120},
+    "metrics_applicable": true,
+    "success_criteria": "Top-1 là section 11 của đúng đề cương; câu trả lời nêu Business Partner B1: Student's book và citation đúng.",
+    "why_this_is_a_good_case": "Tên học phần giới hạn đúng tài liệu, còn câu hỏi nhắm tới một section tài liệu tham khảo có nội dung rõ ràng."
+  },
+  {
+    "id": "case_02_failure_ambiguous_course",
+    "case_type": "failure",
+    "question": "Mục tiêu của học phần là gì?",
+    "ground_truth": [],
+    "recommended_settings": {"top_k": 3, "chunk_size": 700, "chunk_overlap": 120},
+    "metrics_applicable": false,
+    "expected_behavior": "Không coi một PDF bất kỳ là đáp án duy nhất. Đây là truy vấn mơ hồ vì nhiều đề cương đều có section Mục tiêu học phần.",
+    "failure_reason": "Câu hỏi không nêu tên học phần hoặc tên file, nên không có scope metadata để phân biệt các section cùng cấu trúc. Không dùng case này để tính Precision@3/Recall@3 với một ground truth đơn lẻ.",
+    "analysis_action": "So sánh source/section của Top-K; sau đó hỏi lại cùng nội dung nhưng thêm tên học phần để kiểm tra hiệu quả của metadata filtering."
+  },
+  {
+    "id": "case_03_recursive_vs_fixed_long_section",
+    "case_type": "strategy_difference",
+    "question": "Một số phát minh của cách mạng Công nghiệp lần thứ 4 là gì?",
+    "ground_truth": [
+      {"source": "baigiangtext_moi.pdf", "page": 7, "section": "Một số phát minh của cách mạng Công nghiệp lần thứ 4:"}
+    ],
+    "recommended_settings": {"top_k": 3, "chunk_size": 700, "chunk_overlap": 120},
+    "metrics_applicable": true,
+    "strategy_configs": {
+      "recursive": {"strategy": "recursive", "size": 700, "overlap": 120},
+      "fixed": {"strategy": "fixed", "size": 700, "overlap": 120}
+    },
+    "compare": {
+      "recursive": "Kết quả quan sát: Top-1 là chunk_index 0, bắt đầu trực tiếp bằng tiêu đề và câu 'Công nghiệp 4.0...'; score 0.8172.",
+      "fixed": "Kết quả quan sát: Top-1 là chunk_index 7, bắt đầu bằng phần cuối không liên quan '... xử lý giao dịch...' rồi mới tới tiêu đề/nội dung; score 0.8469."
+    },
+    "analysis_action": "Lập chỉ mục lần lượt với recursive và fixed-size cùng chunk_size/overlap; lưu Top-K, Precision@3, Recall@3, latency và số token context. So sánh trực tiếp phần text của Top-1 để chỉ ra khác biệt về tính hoàn chỉnh của ngữ cảnh.",
+    "expected_difference": "Hai chiến lược có thể cùng đúng ở đơn vị section, nhưng recursive cho context liền mạch hơn; fixed-size đưa đoạn bị cắt hoặc trùng overlap lên Top-K."
+  }
+]

@@ -1,0 +1,30 @@
+[
+  {
+    "id": "multi_01_tatm2_conditions_objectives_clo",
+    "question": "Đối với học phần Tiếng Anh thương mại 2, học phần học trước là gì và mã học phần là gì? Mục tiêu của học phần nhấn mạnh những kiến thức, kỹ năng nào, và CLO2 yêu cầu sinh viên thực hiện được những việc gì?",
+    "ground_truth": [
+      {"source": "Đề cương tiếng anh thương mại 2.pdf", "page": 1, "section": "5. Điều kiện của học phần"},
+      {"source": "Đề cương tiếng anh thương mại 2.pdf", "page": 1, "section": "6. Mục tiêu của học phần"},
+      {"source": "Đề cương tiếng anh thương mại 2.pdf", "page": 1, "section": "7. Chuẩn đầu ra của học phần"}
+    ],
+    "answer_rubric": "Nêu đúng học phần học trước và mã ENTI3311; mô tả từ vựng/ngữ pháp, bốn kỹ năng; nêu các năng lực đọc hiểu, soạn thảo văn bản thương mại, nghe-nói và đánh giá thông tin của CLO2."
+  },
+  {
+    "id": "multi_02_tatm2_content_assessment",
+    "question": "Hãy trình bày Tiếng Anh thương mại 2 kế thừa học phần nào, phát triển những kỹ năng nào, và ba thành phần đánh giá có trọng số bao nhiêu? Nêu thêm hình thức thi kết thúc học phần.",
+    "ground_truth": [
+      {"source": "Đề cương tiếng anh thương mại 2.pdf", "page": 2, "section": "8. Mô tả tóm tắt nội dung học phần"},
+      {"source": "Đề cương tiếng anh thương mại 2.pdf", "page": 2, "section": "10. Đánh giá học phần"}
+    ],
+    "answer_rubric": "Nêu được sự tiếp nối từ Tiếng Anh thương mại 1, bốn kỹ năng nghe-nói-đọc-viết, trọng số chuyên cần 0.1, thực hành 0.3, thi kết thúc 0.6 và thi trắc nghiệm trên máy tính."
+  },
+  {
+    "id": "multi_03_tatm2_assessment_learning_resources",
+    "question": "Trong học phần Tiếng Anh thương mại 2, điểm chuyên cần được tính từ những hoạt động nào, bài kiểm tra giữa kỳ và bài tập lớn cá nhân có trọng số bao nhiêu, và giáo trình chính được sử dụng là sách nào?",
+    "ground_truth": [
+      {"source": "Đề cương tiếng anh thương mại 2.pdf", "page": 2, "section": "10. Đánh giá học phần"},
+      {"source": "Đề cương tiếng anh thương mại 2.pdf", "page": 4, "section": "11. Danh mục tài liệu tham khảo của học phần"}
+    ],
+    "answer_rubric": "Nêu hoạt động xem video, luyện trắc nghiệm cuối chương và ý thức học tập; nêu mỗi thành phần giữa kỳ/bài tập lớn là 0.15; nêu Business Partner B1: Student's book là giáo trình chính."
+  }
+]
