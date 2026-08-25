@@ -3,6 +3,19 @@ import argparse, json, sys
 from pathlib import Path
 import pandas as pd
 
+
+def _configure_utf8_console() -> None:
+    """Keep Vietnamese file names and evaluation output safe on Windows terminals."""
+    for stream in (sys.stdout, sys.stderr):
+        try:
+            stream.reconfigure(encoding="utf-8", errors="replace")
+        except (AttributeError, OSError, ValueError):
+            # Some IDE or Streamlit-managed streams cannot be reconfigured.
+            pass
+
+
+_configure_utf8_console()
+
 # Make `python scripts/evaluate.py` work when launched from the repository root.
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from rag.chunking import make_chunks

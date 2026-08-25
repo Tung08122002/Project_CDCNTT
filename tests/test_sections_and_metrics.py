@@ -1,5 +1,6 @@
 import unittest
 from types import SimpleNamespace
+from unittest.mock import patch
 
 from rag.chunking import merge_overlapping_chunks, recursive_chunks
 from rag.evaluation import find_question, metrics
@@ -28,6 +29,28 @@ class SectionAndMetricTests(unittest.TestCase):
         self.assertTrue(all(chunk["section_id"] == "ai__003" for chunk in chunks))
         self.assertTrue(all((chunk["page_start"], chunk["page_end"]) == (5, 6) for chunk in chunks))
         self.assertEqual([chunk["chunk_index"] for chunk in chunks], list(range(len(chunks))))
+
+    def test_embedding_model_uses_local_cache_first(self):
+        cached_model = object()
+        with patch("rag.retrieval.SentenceTransformer", return_value=cached_model) as loader:
+            model = SemanticRetriever._load_embedding_model("model-id")
+        self.assertIs(model, cached_model)
+        loader.assert_called_once_with("model-id", local_files_only=True)
+
+    def test_embedding_model_falls_back_to_download_without_cache(self):
+        downloaded_model = object()
+        with patch(
+            "rag.retrieval.SentenceTransformer", side_effect=[OSError("not cached"), downloaded_model]
+        ) as loader:
+            model = SemanticRetriever._load_embedding_model("model-id")
+        self.assertIs(model, downloaded_model)
+        self.assertEqual(
+            loader.call_args_list,
+            [
+                unittest.mock.call("model-id", local_files_only=True),
+                unittest.mock.call("model-id"),
+            ],
+        )
 
     def test_overlap_merge_does_not_duplicate_text(self):
         merged = merge_overlapping_chunks([{"text": "A B C D E"}, {"text": "D E F G"}])

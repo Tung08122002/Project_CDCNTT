@@ -53,6 +53,21 @@ class SemanticRetriever:
     _STAFF_SECTION_MARKERS = ("cbgd", "can bo giang day")
     _STAFF_TITLE_LINE = re.compile(r"^(?:ts|ths|pgs|gs|dr|prof)\.?$", flags=re.IGNORECASE)
 
+    @staticmethod
+    def _load_embedding_model(model_name: str) -> SentenceTransformer:
+        """Use the local Hugging Face cache before attempting a download.
+
+        SentenceTransformer otherwise performs remote metadata checks even when
+        every model file is already cached. On restricted Windows networks that
+        produces repeated ``WinError 10013`` messages and delays indexing.
+        """
+        try:
+            return SentenceTransformer(model_name, local_files_only=True)
+        except OSError:
+            # Keep first-time setup convenient: a machine without a cache may
+            # still download the public model when its network allows it.
+            return SentenceTransformer(model_name)
+
     @classmethod
     def _staff_profile_texts(cls, chunk: dict[str, Any]) -> list[str]:
         """Build focused semantic views for people listed in CBGD sections.
@@ -97,7 +112,7 @@ class SemanticRetriever:
         }
         self.sources = sorted({chunk["source"] for chunk in chunks})
         self._source_aliases = {source: self._make_source_aliases(source) for source in self.sources}
-        self.model = SentenceTransformer(model_name)
+        self.model = self._load_embedding_model(model_name)
         embedding_texts: list[str] = []
         embedding_chunk_ids: list[int] = []
         for chunk_index, chunk in enumerate(chunks):

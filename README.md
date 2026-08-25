@@ -25,6 +25,11 @@ Project triển khai Semantic Search với SentenceTransformer + FAISS, RAG trê
    `.env` đã được đưa vào `.gitignore`; không dán khóa vào source hoặc commit nó lên Git.
 5. Chạy `python -m streamlit run app.py`.
 
+Mô hình embedding được ưu tiên nạp từ Hugging Face cache cục bộ. Vì vậy, khi
+model đã được tải về, app không gọi mạng để kiểm tra metadata và tránh lỗi
+`WinError 10013`. Nếu máy chưa có cache, lần chạy đầu tiên vẫn tự tải model khi
+kết nối mạng cho phép.
+
 Ứng dụng đọc từng trang, làm sạch khoảng trắng/dòng trống và ghép từ bị ngắt bởi `-\n`. Với đề cương học phần, dòng in đậm mở đầu bằng số được xem là đầu mục. Một đầu mục có thể tiếp tục sang trang sau: hệ thống ghép nội dung liên tục cho đến đầu mục kế tiếp, vẫn lưu `page` là trang bắt đầu và `pages` là các trang liên quan.
 
 PDF tables are extracted as searchable header/value rows, for example `Trọng số: 0.6 | Bài đánh giá: Thi cuối kỳ`. Table headers are reused when a table continues on a later page. Numbered headings that lose bold formatting and labels such as `Ghi chú`, `Lưu ý`, or `Note` are also treated as section boundaries, so their following content remains retrievable.

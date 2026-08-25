@@ -1,5 +1,9 @@
 pymupdf>=1.24.0
 sentence-transformers>=3.0.0
+# Transformers 5.15's auto-docstring validation emits spurious errors for
+# unrelated vision processors during imports. This text-only RAG project is
+# compatible with the stable 4.x series required by sentence-transformers.
+transformers>=4.41.0,<5.0.0
 faiss-cpu>=1.8.0
 streamlit>=1.37.0
 google-genai>=1.0.0
@@ -7,3 +11,6 @@ python-dotenv>=1.0.1
 numpy>=1.26.0
 pandas>=2.2.0
 torchvision
+# Used by scripts/generate_project_report.py to create the PDF report and XLSX benchmark.
+reportlab>=5.0.0
+openpyxl>=3.1.0
